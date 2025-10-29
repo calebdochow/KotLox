@@ -1,11 +1,12 @@
-KOTLIN_SRC = $(wildcard src/*.kt)
-OUT = kotlox.jar
+KOTLIN_SRC = src/Lox.kt src/Scanner.kt src/Token.kt src/TokenType.kt
+OUT = out/KotLox.jar
 
-build:
+all:
+	mkdir -p out
 	kotlinc $(KOTLIN_SRC) -include-runtime -d $(OUT)
 
-run: build
+run: all
 	java -jar $(OUT)
 
 clean:
-	rm -f $(OUT)
+	rm -rf out
