@@ -1,0 +1,30 @@
+# === Kotlin & Java build outputs ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Build artifacts ===
+out/
+build/
+bin/
+
+# === Logs and temp files ===
+*.log
+*.tmp
+*.swp
+*.bak
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === VS Code ===
+.vscode/
+
+# === Kotlin REPL history ===
+.kotlin_history
+
+# === Optional: JetBrains IDEs (if you ever open in IntelliJ) ===
+.idea/
+*.iml
