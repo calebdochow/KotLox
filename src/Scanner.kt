@@ -1,7 +1,5 @@
 package kotlox
 
-import kotlox.TokenType
-
 class Scanner(private val source: String) {
     private val tokens = mutableListOf<Token>()
     private var start = 0
