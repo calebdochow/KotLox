@@ -1,4 +1,10 @@
 package kotlox
+import kotlox.TokenType
+import kotlox.Token
+import kotlox.Scanner
+import kotlox.Expr
+import kotlox.Parser
+import kotlox.tools.AstPrinter
 
 fun main() {
     println("Testbed running...\n")
@@ -11,6 +17,78 @@ fun main() {
     runTest("Comments", ::testComments)
 
     println("\nScanner tests passed successfully!")
+    
+    // Parser tests (chapter 6 - expressions)
+    runTest("Unary expression", ::testUnaryExpression)
+    runTest("Binary precedence", ::testBinaryPrecedence)
+    runTest("Grouping and precedence", ::testGroupingPrecedence)
+    runTest("Equality chaining", ::testEqualityChaining)
+    runTest("Literals (true/false/nil/string)", ::testLiterals)
+    
+    // Build: -123 * (45.67)
+    val expression = Expr.Binary(
+        Expr.Unary(
+            Token(TokenType.MINUS, "-", null, 1),
+            Expr.Literal(123)
+        ),
+        Token(TokenType.STAR, "*", null, 1),
+        Expr.Grouping(Expr.Literal(45.67))
+    )
+
+    println(AstPrinter().print(expression))
+
+}
+
+/* ──────────────── Parser Test Helpers & Cases ──────────────── */
+
+private fun parse(input: String): Expr {
+    val tokens = scan(input)
+    val parser = Parser(tokens)
+    return parser.parse() ?: throw AssertionError("Parser returned null for input: $input")
+}
+
+fun testUnaryExpression() {
+    val input = "-123"
+    val expr = parse(input)
+    val printed = kotlox.tools.AstPrinter().print(expr)
+    // note: numbers are parsed as Double, so whole numbers print with .0
+    assertEqual(printed, "(- 123.0)", input)
+}
+
+fun testBinaryPrecedence() {
+    val input = "1 + 2 * 3"
+    val expr = parse(input)
+    val printed = kotlox.tools.AstPrinter().print(expr)
+    assertEqual(printed, "(+ 1.0 (* 2.0 3.0))", input)
+}
+
+fun testGroupingPrecedence() {
+    val input = "(1 + 2) * 3"
+    val expr = parse(input)
+    val printed = kotlox.tools.AstPrinter().print(expr)
+    assertEqual(printed, "(* (group (+ 1.0 2.0)) 3.0)", input)
+}
+
+fun testEqualityChaining() {
+    val input = "1 == 2 != 3"
+    val expr = parse(input)
+    val printed = kotlox.tools.AstPrinter().print(expr)
+    assertEqual(printed, "(!= (== 1.0 2.0) 3.0)", input)
+}
+
+fun testLiterals() {
+    // parse only the first expression at a time, so test them individually
+    var expr = parse("true")
+    assertEqual(kotlox.tools.AstPrinter().print(expr), "true", "true")
+
+    expr = parse("false")
+    assertEqual(kotlox.tools.AstPrinter().print(expr), "false", "false")
+
+    expr = parse("nil")
+    assertEqual(kotlox.tools.AstPrinter().print(expr), "nil", "nil")
+
+    expr = parse("\"hi\"")
+    assertEqual(kotlox.tools.AstPrinter().print(expr), "hi", "string literal")
 }
 
 private fun runTest(name: String, test: () -> Unit) {
