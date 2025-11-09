@@ -1,6 +1,6 @@
 package kotlox
 
-internal class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
+class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
 
     // Execution environment
     private val globals = Environment()
@@ -31,17 +31,18 @@ internal class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
         stmt.accept(this)
     }
 
-    fun executeBlock(statements: List<Stmt>, newEnv: Environment) {
+    fun executeBlock(statements: Iterable<Stmt>, newEnv: Environment) {
         val previous = environment
         try {
             environment = newEnv
-            for (stmt in statements) {
-                execute(stmt)
+            for (statement in statements) {
+                execute(statement)
             }
         } finally {
             environment = previous
         }
     }
+
 
 
     override fun visitLiteralExpr(expr: Expr.Literal): Any? {
@@ -173,8 +174,25 @@ internal class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     }
 
     override fun visitCallExpr(expr: Expr.Call): Any? {
-        throw RuntimeError(expr.paren, "Function calls not yet implemented.")
+        val callee = evaluate(expr.callee)
+
+        // evaluate arguments into a list
+        val arguments = mutableListOf<Any?>()
+        for (arg in expr.arguments) {
+            arguments.add(evaluate(arg))
+        }
+
+        if (callee !is LoxCallable) {
+            throw RuntimeError(expr.paren, "Can only call functions and classes.")
+        }
+
+        if (arguments.size != callee.arity()) {
+            throw RuntimeError(expr.paren, "Expected ${callee.arity()} arguments but got ${arguments.size}.")
+        }
+
+        return callee.call(this, arguments)
     }
+
 
     override fun visitGetExpr(expr: Expr.Get): Any? {
         throw RuntimeError(expr.name, "Property access not yet implemented.")
@@ -233,4 +251,15 @@ internal class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
             execute(expr.body)
         }
     }
+
+    override fun visitFunctionStmt(expr: Stmt.Function) {
+        val function = LoxFunction(expr, environment, false)
+        environment.define(expr.name.lexeme, function)
+    }
+
+    override fun visitReturnStmt(expr: Stmt.Return) {
+        val value = if (expr.value != null) evaluate(expr.value) else null
+        throw Return(value)
+    }
+
 }

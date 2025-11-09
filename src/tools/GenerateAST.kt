@@ -38,8 +38,10 @@ class GenerateAst {
                     "Expression : Expr expression",
                     "Print      : Expr expression",
                     "Var        : Token name, Expr? initializer",
+                    "Function   : Token name, List<Token> params, List<Stmt> body",
                     "Block      : List<Stmt> statements",
                     "If         : Expr condition, Stmt thenBranch, Stmt? elseBranch",
+                    "Return     : Token keyword, Expr? value",
                     "While      : Expr condition, Stmt body"
                 )
             )

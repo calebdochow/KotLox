@@ -42,9 +42,14 @@ fun main() {
 /* ──────────────── Parser Test Helpers & Cases ──────────────── */
 
 private fun parse(input: String): Expr {
-    val tokens = scan(input)
+    // Parser now parses statements, so parse a single expression by appending a semicolon
+    val tokens = scan("$input;")
     val parser = Parser(tokens)
-    return parser.parse() ?: throw AssertionError("Parser returned null for input: $input")
+    val stmts = parser.parse()
+    if (stmts.isEmpty()) throw AssertionError("Parser returned no statements for input: $input")
+    val first = stmts[0]
+    if (first !is Stmt.Expression) throw AssertionError("Expected expression statement for input: $input")
+    return first.expression
 }
 
 fun testUnaryExpression() {
