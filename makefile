@@ -1,4 +1,4 @@
-SRC = src/Lox.kt src/Scanner.kt src/Token.kt src/TokenType.kt src/Parser.kt src/Expr.kt src/RuntimeError.kt src/Interpreter.kt src/tools/ASTPrinter.kt
+SRC = src/Lox.kt src/Scanner.kt src/Token.kt src/TokenType.kt src/Parser.kt src/Expr.kt src/Stmt.kt src/Environment.kt src/RuntimeError.kt src/Interpreter.kt src/tools/ASTPrinter.kt
 TEST = src/Testbed.kt
 OUT_DIR = out
 
