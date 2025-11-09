@@ -1,7 +1,12 @@
 package kotlox
 
-internal class Interpreter : Expr.Visitor<Any?> {
+internal class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
 
+    // Execution environment
+    private val globals = Environment()
+    private var environment: Environment = globals
+
+    // Expression-based interpreter (chapter 6)
     fun interpret(expression: Expr?) {
         try {
             val value = evaluate(expression)
@@ -10,6 +15,34 @@ internal class Interpreter : Expr.Visitor<Any?> {
             Lox.runtimeError(error)
         }
     }
+
+    // Statement-based interpreter
+    fun interpret(statements: List<Stmt>) {
+        try {
+            for (stmt in statements) {
+                execute(stmt)
+            }
+        } catch (error: RuntimeError) {
+            Lox.runtimeError(error)
+        }
+    }
+
+    private fun execute(stmt: Stmt) {
+        stmt.accept(this)
+    }
+
+    fun executeBlock(statements: List<Stmt>, newEnv: Environment) {
+        val previous = environment
+        try {
+            environment = newEnv
+            for (stmt in statements) {
+                execute(stmt)
+            }
+        } finally {
+            environment = previous
+        }
+    }
+
 
     override fun visitLiteralExpr(expr: Expr.Literal): Any? {
         return expr.value
@@ -134,7 +167,9 @@ internal class Interpreter : Expr.Visitor<Any?> {
     }
 
     override fun visitAssignExpr(expr: Expr.Assign): Any? {
-        throw RuntimeError(expr.name, "Assignment not yet implemented.")
+        val value = evaluate(expr.value)
+        environment.assign(expr.name, value)
+        return value
     }
 
     override fun visitCallExpr(expr: Expr.Call): Any? {
@@ -162,6 +197,40 @@ internal class Interpreter : Expr.Visitor<Any?> {
     }
 
     override fun visitVariableExpr(expr: Expr.Variable): Any? {
-        throw RuntimeError(expr.name, "Variables not yet implemented.")
+        return environment.get(expr.name)
+    }
+
+    /* Statement visitor methods */
+    override fun visitExpressionStmt(expr: Stmt.Expression) {
+        evaluate(expr.expression)
+    }
+
+    override fun visitPrintStmt(expr: Stmt.Print) {
+        val value = evaluate(expr.expression)
+        println(stringify(value))
+    }
+
+    override fun visitVarStmt(expr: Stmt.Var) {
+        val value = if (expr.initializer != null) evaluate(expr.initializer) else null
+        environment.define(expr.name.lexeme, value)
+    }
+
+    override fun visitBlockStmt(expr: Stmt.Block) {
+        executeBlock(expr.statements, Environment(environment))
+    }
+
+    override fun visitIfStmt(expr: Stmt.If) {
+        val cond = evaluate(expr.condition)
+        if (isTruthy(cond)) {
+            execute(expr.thenBranch)
+        } else if (expr.elseBranch != null) {
+            execute(expr.elseBranch)
+        }
+    }
+
+    override fun visitWhileStmt(expr: Stmt.While) {
+        while (isTruthy(evaluate(expr.condition))) {
+            execute(expr.body)
+        }
     }
 }

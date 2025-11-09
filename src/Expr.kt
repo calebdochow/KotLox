@@ -4,18 +4,18 @@ package kotlox
 
 abstract class Expr {
   interface Visitor<R> {
-    fun visitAssignExpr(expr: Assign): R
-    fun visitBinaryExpr(expr: Binary): R
-    fun visitCallExpr(expr: Call): R
-    fun visitGetExpr(expr: Get): R
-    fun visitGroupingExpr(expr: Grouping): R
-    fun visitLiteralExpr(expr: Literal): R
-    fun visitLogicalExpr(expr: Logical): R
-    fun visitSetExpr(expr: Set): R
-    fun visitSuperExpr(expr: Super): R
-    fun visitThisExpr(expr: This): R
-    fun visitUnaryExpr(expr: Unary): R
-    fun visitVariableExpr(expr: Variable): R
+    fun visitAssignExpr(expr: Expr.Assign): R
+    fun visitBinaryExpr(expr: Expr.Binary): R
+    fun visitCallExpr(expr: Expr.Call): R
+    fun visitGetExpr(expr: Expr.Get): R
+    fun visitGroupingExpr(expr: Expr.Grouping): R
+    fun visitLiteralExpr(expr: Expr.Literal): R
+    fun visitLogicalExpr(expr: Expr.Logical): R
+    fun visitSetExpr(expr: Expr.Set): R
+    fun visitSuperExpr(expr: Expr.Super): R
+    fun visitThisExpr(expr: Expr.This): R
+    fun visitUnaryExpr(expr: Expr.Unary): R
+    fun visitVariableExpr(expr: Expr.Variable): R
   }
 class Assign(val name: Token, val value: Expr) : Expr() {
     override fun <R> accept(visitor: Visitor<R>): R {

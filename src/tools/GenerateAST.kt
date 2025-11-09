@@ -32,20 +32,18 @@ class GenerateAst {
                 )
             )
 
-            // Stmt
+            // Stmt.kt
             defineAst(
                 outputDir, "Stmt", listOf(
-                    "Block      : Iterable<Stmt> statements",
-                    "Class      : Token name, Expr.Variable? superclass, Iterable<Stmt.Function> methods",
                     "Expression : Expr expression",
-                    "Function   : Token name, Iterable<Token> params, Iterable<Stmt> body",
-                    "If         : Expr condition, Stmt thenBranch, Stmt? elseBranch",
                     "Print      : Expr expression",
-                    "Return     : Token keyword, Expr? value",
                     "Var        : Token name, Expr? initializer",
+                    "Block      : List<Stmt> statements",
+                    "If         : Expr condition, Stmt thenBranch, Stmt? elseBranch",
                     "While      : Expr condition, Stmt body"
                 )
             )
+
         }
 
         @Throws(IOException::class)
@@ -85,10 +83,11 @@ class GenerateAst {
         private fun defineVisitor(writer: PrintWriter, baseName: String, types: List<String>) {
             writer.println("  interface Visitor<R> {")
             for (type in types) {
-                writer.println("    fun visit${type}${baseName}(${baseName.lowercase()}: ${type}): R")
+                writer.println("    fun visit${type}${baseName}(expr: $baseName.$type): R")
             }
             writer.println("  }")
         }
+
 
         private fun defineType(
             writer: PrintWriter, baseName: String,
