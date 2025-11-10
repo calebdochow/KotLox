@@ -1,0 +1,96 @@
+// ────────────── Chapter 10: Functions Stress Test ──────────────
+
+// Basic function call
+fun greet() {
+    print "Hello from KotLox!";
+}
+greet();
+
+// Function with parameters
+fun add(a, b) {
+    return a + b;
+}
+print add(2, 3); // Expect 5
+
+// Function returning early
+fun earlyReturn() {
+    print "Before return";
+    return "Done";
+    print "After return";
+}
+print earlyReturn(); // Should not print "After return"
+
+// Nested function calls
+fun square(x) {
+    return x * x;
+}
+fun cube(x) {
+    return x * square(x);
+}
+print cube(3); // Expect 27
+
+// Functions and variable scope
+var globalVar = 10;
+fun scopeTest(a) {
+    var localVar = a + 5;
+    print localVar;
+    print globalVar;
+}
+scopeTest(5); // Expect 10 and 10
+
+// Recursive function
+fun factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+print factorial(5); // Expect 120
+
+// Functions with no return value (nil)
+fun noReturn() {
+    print "Nothing to return";
+}
+print noReturn(); // Should print message and then nil
+
+// Functions calling other functions
+fun sumSquares(a, b) {
+    return square(a) + square(b);
+}
+print sumSquares(2, 3); // Expect 13
+
+// Edge case: too few arguments
+fun testArgs(x, y) {
+    return x + y;
+}
+// Uncomment to test error handling
+// print testArgs(1); 
+
+// Edge case: undefined function
+// Uncomment to test runtime error
+// print undefinedFunc();
+
+// Function calling itself multiple times
+fun countdown(n) {
+    if (n <= 0) return;
+    print n;
+    countdown(n - 1);
+}
+countdown(5); // Prints 5,4,3,2,1
+
+// Stress test large number of function calls
+fun nestedCalls(n) {
+    if (n <= 0) return;
+    nestedCalls(n - 1);
+}
+nestedCalls(50); // Should not crash
+
+// Complex expression in return
+fun complex(a, b) {
+    return (a + b) * (a - b) / (a + 1);
+}
+print complex(5, 2); // Compute (5+2)*(5-2)/(5+1) = 7*3/6 = 3.5
+
+// Multiple function definitions
+fun f1() { print "f1"; }
+fun f2() { print "f2"; }
+fun f3() { print "f3"; }
+f1(); f2(); f3();

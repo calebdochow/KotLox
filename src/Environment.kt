@@ -26,4 +26,7 @@ class Environment(private val enclosing: Environment? = null) {
         }
         throw RuntimeError(name, "Undefined variable '${name.lexeme}'.")
     }
+    fun isGlobal(): Boolean {
+        return enclosing == null
+    }
 }

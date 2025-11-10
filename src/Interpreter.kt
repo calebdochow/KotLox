@@ -20,12 +20,18 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     fun interpret(statements: List<Stmt>) {
         try {
             for (stmt in statements) {
-                execute(stmt)
+                if (stmt is Stmt.Expression) {
+                    val value = evaluate(stmt.expression)
+                    println(stringify(value))
+                } else {
+                    execute(stmt)
+                }
             }
         } catch (error: RuntimeError) {
             Lox.runtimeError(error)
         }
     }
+
 
     private fun execute(stmt: Stmt) {
         stmt.accept(this)
@@ -193,14 +199,26 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
         return callee.call(this, arguments)
     }
 
-
     override fun visitGetExpr(expr: Expr.Get): Any? {
         throw RuntimeError(expr.name, "Property access not yet implemented.")
     }
 
     override fun visitLogicalExpr(expr: Expr.Logical): Any? {
-        throw RuntimeError(expr.operator, "Logical operators not yet implemented.")
+        val left = evaluate(expr.left)
+
+        return when (expr.operator.type) {
+            TokenType.OR -> {
+                if (isTruthy(left)) return left 
+                evaluate(expr.right)
+            }
+            TokenType.AND -> {
+                if (!isTruthy(left)) return left 
+                evaluate(expr.right)
+            }
+            else -> throw RuntimeError(expr.operator, "Unknown logical operator")
+        }
     }
+
 
     override fun visitSetExpr(expr: Expr.Set): Any? {
         throw RuntimeError(expr.name, "Property assignment not yet implemented.")
@@ -229,8 +247,8 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     }
 
     override fun visitVarStmt(expr: Stmt.Var) {
-        val value = if (expr.initializer != null) evaluate(expr.initializer) else null
-        environment.define(expr.name.lexeme, value)
+    val value = if (expr.initializer != null) evaluate(expr.initializer) else null
+    environment.define(expr.name.lexeme, value)
     }
 
     override fun visitBlockStmt(expr: Stmt.Block) {

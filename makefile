@@ -13,6 +13,10 @@ run: generateast
 	kotlinc $(SRC) -include-runtime -d $(OUT_DIR)/KotLox.jar
 	kotlin -classpath $(OUT_DIR)/KotLox.jar kotlox.Lox
 
+run-file:
+	mkdir -p $(OUT_DIR)
+	kotlinc $(SRC) -include-runtime -d $(OUT_DIR)/KotLox.jar
+	kotlin -classpath $(OUT_DIR)/KotLox.jar kotlox.Lox TestFile.txt
 
 test: generateast
 	mkdir -p $(OUT_DIR)
