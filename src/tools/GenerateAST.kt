@@ -68,10 +68,8 @@ class GenerateAst {
             writer.println()
             writer.println("abstract class $baseName {")
 
-            // Visitor interface
             defineVisitor(writer, baseName, types.map { it.first })
 
-            // AST classes
             for ((className, fields) in types) {
                 defineType(writer, baseName, className, fields)
             }

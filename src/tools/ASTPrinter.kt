@@ -1,13 +1,11 @@
 package kotlox.tools
 import kotlox.Expr
 
-// AST pretty-printer (implements all Expr.Visitor methods)
 class AstPrinter : Expr.Visitor<String> {
 
     fun print(expr: Expr): String = expr.accept(this)
 
     override fun visitAssignExpr(expr: Expr.Assign): String {
-        // (assign name value)
         return "(assign ${expr.name.lexeme} ${expr.value.accept(this)})"
     }
 
@@ -28,7 +26,6 @@ class AstPrinter : Expr.Visitor<String> {
     }
 
     override fun visitGetExpr(expr: Expr.Get): String {
-        // (get <object> <name>)
         return "(get ${expr.obj.accept(this)} ${expr.name.lexeme})"
     }
 
@@ -45,12 +42,10 @@ class AstPrinter : Expr.Visitor<String> {
     }
 
     override fun visitSetExpr(expr: Expr.Set): String {
-        // (set <object> <name> <value>)
         return "(set ${expr.obj.accept(this)} ${expr.name.lexeme} ${expr.value.accept(this)})"
     }
 
     override fun visitSuperExpr(expr: Expr.Super): String {
-        // (super <method>)
         return "(super ${expr.method.lexeme})"
     }
 
@@ -66,7 +61,6 @@ class AstPrinter : Expr.Visitor<String> {
         return expr.name.lexeme
     }
 
-    // helper to format (name expr...)
     private fun parenthesize(name: String, vararg exprs: Expr): String {
         val builder = StringBuilder()
         builder.append("(").append(name)

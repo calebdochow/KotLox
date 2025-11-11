@@ -3,16 +3,9 @@ package kotlox
 import kotlox.TokenType.*
 import kotlox.Return
 
-/**
- * Full Parser for KotLox (Chapters 6-10):
- * - declarations (fun, var)
- * - statements (for, if, while, print, return, block, expr-stmt)
- * - expressions including calls and logical (and/or)
- */
 class Parser(private val tokens: List<Token>) {
     private var current = 0
 
-    // entry point: parse a sequence of declarations/statements into a program
     fun parse(): List<Stmt> {
         val statements = mutableListOf<Stmt>()
         while (!isAtEnd()) {
@@ -22,9 +15,6 @@ class Parser(private val tokens: List<Token>) {
         return statements
     }
 
-    // --------------------
-    // Declarations
-    // --------------------
     private fun declaration(): Stmt? {
         try {
             if (match(FUN)) return function("function")
@@ -48,7 +38,6 @@ class Parser(private val tokens: List<Token>) {
         return Stmt.Var(name, initializer)
     }
 
-    // helper for function declarations: function(kind) -> Stmt.Function
     private fun function(kind: String): Stmt.Function {
         val name = consume(IDENTIFIER, "Expect $kind name.")
         consume(LEFT_PAREN, "Expect '(' after $kind name.")
@@ -67,9 +56,6 @@ class Parser(private val tokens: List<Token>) {
         return Stmt.Function(name, parameters, body)
     }
 
-    // --------------------
-    // Statements
-    // --------------------
     private fun statement(): Stmt {
         if (match(FOR)) return forStatement()
         if (match(IF)) return ifStatement()
@@ -105,7 +91,6 @@ class Parser(private val tokens: List<Token>) {
 
         var body = statement()
 
-        // desugar increment into end of loop body
         if (increment != null) {
             body = Stmt.Block(listOf(body, Stmt.Expression(increment)))
         }
@@ -167,9 +152,6 @@ class Parser(private val tokens: List<Token>) {
         return statements
     }
 
-    // --------------------
-    // Expressions (with assignment & logical)
-    // --------------------
     private fun expression(): Expr = assignment()
 
     private fun assignment(): Expr {
@@ -190,7 +172,6 @@ class Parser(private val tokens: List<Token>) {
         return expr
     }
 
-    // or → and ( "or" and )* ;
     private fun or(): Expr {
         var expr = and()
 
@@ -203,7 +184,6 @@ class Parser(private val tokens: List<Token>) {
         return expr
     }
 
-    // and → equality ( "and" equality )* ;
     private fun and(): Expr {
         var expr = equality()
 
@@ -274,7 +254,6 @@ class Parser(private val tokens: List<Token>) {
         return call()
     }
 
-    // call -> primary ( "(" arguments? ")" )* ;
     private fun call(): Expr {
         var expr = primary()
         while (true) {
@@ -323,9 +302,6 @@ class Parser(private val tokens: List<Token>) {
         throw error(peek(), "Expect expression.")
     }
 
-    // --------------------
-    // helpers
-    // --------------------
     private fun match(vararg types: TokenType): Boolean {
         for (type in types) {
             if (check(type)) {
@@ -357,9 +333,6 @@ class Parser(private val tokens: List<Token>) {
 
     private fun previous(): Token = tokens[current - 1]
 
-    // --------------------
-    // errors & recovery
-    // --------------------
     private class ParseError : RuntimeException()
 
     private fun error(token: Token, message: String): ParseError {

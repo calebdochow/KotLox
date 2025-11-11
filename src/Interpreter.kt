@@ -6,7 +6,7 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     private val globals = Environment()
     private var environment: Environment = globals
 
-    // Expression-based interpreter (chapter 6)
+    // Expresssion-based interpreter
     fun interpret(expression: Expr?) {
         try {
             val value = evaluate(expression)
@@ -22,7 +22,7 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
             for (stmt in statements) {
                 if (stmt is Stmt.Expression) {
                     val value = evaluate(stmt.expression)
-                    println(stringify(value))
+                    //println(stringify(value))
                 } else {
                     execute(stmt)
                 }
@@ -31,7 +31,6 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
             Lox.runtimeError(error)
         }
     }
-
 
     private fun execute(stmt: Stmt) {
         stmt.accept(this)
@@ -48,8 +47,6 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
             environment = previous
         }
     }
-
-
 
     override fun visitLiteralExpr(expr: Expr.Literal): Any? {
         return expr.value
@@ -69,7 +66,6 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
             }
 
             TokenType.BANG -> !isTruthy(right)
-
             else -> null
         }
     }
@@ -182,7 +178,6 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     override fun visitCallExpr(expr: Expr.Call): Any? {
         val callee = evaluate(expr.callee)
 
-        // evaluate arguments into a list
         val arguments = mutableListOf<Any?>()
         for (arg in expr.arguments) {
             arguments.add(evaluate(arg))
@@ -197,10 +192,6 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
         }
 
         return callee.call(this, arguments)
-    }
-
-    override fun visitGetExpr(expr: Expr.Get): Any? {
-        throw RuntimeError(expr.name, "Property access not yet implemented.")
     }
 
     override fun visitLogicalExpr(expr: Expr.Logical): Any? {
@@ -219,24 +210,26 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
         }
     }
 
+    override fun visitGetExpr(expr: Expr.Get): Any? {
+        throw RuntimeError(expr.name, "Chapter 12+, didnt get to it.")
+    }
 
     override fun visitSetExpr(expr: Expr.Set): Any? {
-        throw RuntimeError(expr.name, "Property assignment not yet implemented.")
+        throw RuntimeError(expr.name, "Chapter 12+, didnt get to it.")
     }
 
     override fun visitSuperExpr(expr: Expr.Super): Any? {
-        throw RuntimeError(expr.keyword, "Super not yet implemented.")
+        throw RuntimeError(expr.keyword, "Chapter 12+, didnt get to it.")
     }
 
     override fun visitThisExpr(expr: Expr.This): Any? {
-        throw RuntimeError(expr.keyword, "This not yet implemented.")
+        throw RuntimeError(expr.keyword, "Chapter 12+, didnt get to it.")
     }
 
     override fun visitVariableExpr(expr: Expr.Variable): Any? {
         return environment.get(expr.name)
     }
 
-    /* Statement visitor methods */
     override fun visitExpressionStmt(expr: Stmt.Expression) {
         evaluate(expr.expression)
     }
@@ -247,8 +240,8 @@ class Interpreter : Expr.Visitor<Any?>, Stmt.Visitor<Unit> {
     }
 
     override fun visitVarStmt(expr: Stmt.Var) {
-    val value = if (expr.initializer != null) evaluate(expr.initializer) else null
-    environment.define(expr.name.lexeme, value)
+        val value = if (expr.initializer != null) evaluate(expr.initializer) else null
+        environment.define(expr.name.lexeme, value)
     }
 
     override fun visitBlockStmt(expr: Stmt.Block) {

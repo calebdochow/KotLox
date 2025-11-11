@@ -70,7 +70,6 @@ fun main() {
         "20"
     )
 
-    // Logical expressions (not yet implemented)
     runStatementTest(
         "Logical AND/OR",
         """
@@ -82,7 +81,6 @@ fun main() {
         "false\ntrue"
     )
 
-    // Recursive function (factorial)
     runStatementTest(
         "Recursive function",
         """
@@ -94,6 +92,184 @@ fun main() {
         """.trimIndent(),
         "120"
     )
+
+        runStatementTest(
+        "Variable shadowing inside block",
+        """
+        var a = "global";
+        {
+            var a = "local";
+            print a;
+        }
+        print a;
+        """.trimIndent(),
+        "local\nglobal"
+    )
+
+    runStatementTest(
+        "Variable reference from enclosing scope",
+        """
+        var a = "outer";
+        {
+            print a;
+        }
+        """.trimIndent(),
+        "outer"
+    )
+
+    runStatementTest(
+        "Simple closure capture",
+        """
+        fun makeCounter() {
+            var count = 0;
+            fun inc() {
+                count = count + 1;
+                return count;
+            }
+            return inc;
+        }
+        var counter = makeCounter();
+        print counter();
+        print counter();
+        """.trimIndent(),
+        "1\n2"
+    )
+
+    runStatementTest(
+        "Nested closures sharing environment",
+        """
+        fun outer() {
+            var x = "outside";
+            fun inner() {
+                print x;
+            }
+            return inner;
+        }
+        var closure = outer();
+        closure();
+        """.trimIndent(),
+        "outside"
+    )
+
+    runStatementTest(
+        "If without else",
+        """
+        var a = 10;
+        if (a > 5) print "yes";
+        """.trimIndent(),
+        "yes"
+    )
+
+    runStatementTest(
+        "While with return condition",
+        """
+        var i = 0;
+        while (true) {
+            print i;
+            i = i + 1;
+            if (i == 3) return;
+        }
+        """.trimIndent(),
+        "0\n1\n2"
+    )
+
+    runStatementTest(
+        "Short-circuit AND",
+        """
+        fun p() { print "should not print"; }
+        var a = false and p();
+        print a;
+        """.trimIndent(),
+        "false"
+    )
+
+    runStatementTest(
+        "Short-circuit OR",
+        """
+        fun p() { print "should not print"; }
+        var a = true or p();
+        print a;
+        """.trimIndent(),
+        "true"
+    )
+
+    runStatementTest(
+        "String concatenation with variable",
+        """
+        var greeting = "Hello";
+        var name = "Lox";
+        print greeting + " " + name + "!";
+        """.trimIndent(),
+        "Hello Lox!"
+    )
+
+    runStatementTest(
+        "Implicit return nil",
+        """
+        fun test() {
+            var a = 10;
+        }
+        test();
+        """.trimIndent(),
+        ""
+    )
+
+    runStatementTest(
+        "Return inside block",
+        """
+        fun f() {
+            if (true) {
+                return 123;
+            }
+            return 999;
+        }
+        print f();
+        """.trimIndent(),
+        "123"
+    )
+
+    runStatementTest(
+        "Inner function reads outer variable",
+        """
+        fun outer() {
+            var x = "outer";
+            fun inner() { print x; }
+            inner();
+        }
+        outer();
+        """.trimIndent(),
+        "outer"
+    )
+
+    runStatementTest(
+        "Inner variable hides outer variable",
+        """
+        var x = "global";
+        fun outer() {
+            var x = "outer";
+            fun inner() {
+                var x = "inner";
+                print x;
+            }
+            inner();
+        }
+        outer();
+        """.trimIndent(),
+        "inner"
+    )
+
+    runStatementTest(
+        "Recursive countdown",
+        """
+        fun countdown(n) {
+            print n;
+            if (n > 0) countdown(n - 1);
+        }
+        countdown(3);
+        """.trimIndent(),
+        "3\n2\n1\n0"
+    )
+
 
     println("\nAll extended tests finished.")
 }
@@ -111,6 +287,8 @@ private fun runStatementTest(name: String, source: String, expectedOutput: Strin
 
     try {
         Lox.run(source)
+    } catch (e: Return) {
+        // ignore returns from top-level code
     } catch (e: Exception) {
         System.setOut(originalOut)
         println("Exception occurred: ${e.message}\n[FAIL]\n")
@@ -118,7 +296,7 @@ private fun runStatementTest(name: String, source: String, expectedOutput: Strin
     }
 
     System.setOut(originalOut)
-    val actualOutput = out.toString().trim().replace("\r\n", "\n") // normalize newlines
+    val actualOutput = out.toString().trim().replace("\r\n", "\n")
 
     println("Actual Output:\n$actualOutput")
     if (actualOutput == expectedOutput) {
