@@ -1,0 +1,22 @@
+KotLox is a Kotlin-based "Lox" interpreter based on the book Crafting Interpreters by Robert Nystrom. 
+KotLox covers chapters 1-11 of this textbook. This interpreter can handle variables, operators, expressions, statements, and user defined functions with closure.
+
+In ~/src/tools/GenerateAST.kt, this creates both Expr.kt and Stmt.kt. These are the abstract syntax tree node classes.
+
+Clone the repo
+
+make clean: (Cleans Project)
+
+make generateast (Generates Expr.kt and Stmt.kt)
+
+make run: (Launches REPL)*
+
+make run-file: (Reads from TestFile.txt)*
+
+make test: (Runs Testbed.kt, Test Cases)*
+
+*runs generateast
+
+Ex. make clean, make test
+    make clean, make run
+    make clean, make run-file
