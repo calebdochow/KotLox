@@ -21,7 +21,7 @@ run-file:
 test: generateast
 	mkdir -p $(OUT_DIR)
 	kotlinc $(SRC) src/Testbed.kt -d $(OUT_DIR)
-	kotlin -cp $(OUT_DIR) kotlox.TestbedKt
+	kotlin -cp $(OUT_DIR) kotlox.TestbedKt | tee results.txt
 
 clean:
 	rm -rf $(OUT_DIR)

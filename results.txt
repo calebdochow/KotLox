@@ -1,0 +1,478 @@
+Extended Testbed running...
+
+Running Statement Test: Addition
+Input:
+print 2 + 3;
+Expected Output:
+5
+Actual Output:
+5
+[OK] Passed
+
+Running Statement Test: Subtraction
+Input:
+print 10 - 4;
+Expected Output:
+6
+Actual Output:
+6
+[OK] Passed
+
+Running Statement Test: Multiplication
+Input:
+print 6 * 7;
+Expected Output:
+42
+Actual Output:
+42
+[OK] Passed
+
+Running Statement Test: Division
+Input:
+print 20 / 4;
+Expected Output:
+5
+Actual Output:
+5
+[OK] Passed
+
+Running Statement Test: Division by zero
+Input:
+print 1 / 0;
+Expected Output:
+Infinity
+Actual Output:
+Infinity
+[OK] Passed
+
+Running Statement Test: Unary minus
+Input:
+print -42;
+Expected Output:
+-42
+Actual Output:
+-42
+[OK] Passed
+
+Running Statement Test: Unary bang
+Input:
+print !true;
+Expected Output:
+false
+Actual Output:
+false
+[OK] Passed
+
+Running Statement Test: Comparison greater
+Input:
+print 5 > 3;
+Expected Output:
+true
+Actual Output:
+true
+[OK] Passed
+
+Running Statement Test: Comparison less
+Input:
+print 2 < 5;
+Expected Output:
+true
+Actual Output:
+true
+[OK] Passed
+
+Running Statement Test: Comparison equal
+Input:
+print 4 == 4;
+Expected Output:
+true
+Actual Output:
+true
+[OK] Passed
+
+Running Statement Test: Comparison not equal
+Input:
+print 4 != 5;
+Expected Output:
+true
+Actual Output:
+true
+[OK] Passed
+
+Running Statement Test: Mixed addition
+Input:
+print 2 + 3 * 4;
+Expected Output:
+14
+Actual Output:
+14
+[OK] Passed
+
+Running Statement Test: Parentheses precedence
+Input:
+print (2 + 3) * 4;
+Expected Output:
+20
+Actual Output:
+20
+[OK] Passed
+
+Running Statement Test: String concatenation
+Input:
+print "Hello " + "World";
+Expected Output:
+Hello World
+Actual Output:
+Hello World
+[OK] Passed
+
+Running Statement Test: Variable Declaration
+Input:
+var a = 123;
+Expected Output:
+
+Actual Output:
+
+[OK] Passed
+
+Running Statement Test: Print Literal
+Input:
+print 42;
+Expected Output:
+42
+Actual Output:
+42
+[OK] Passed
+
+Running Statement Test: Print Variable
+Input:
+var b = 7; print b;
+Expected Output:
+7
+Actual Output:
+7
+[OK] Passed
+
+Running Statement Test: Unary Expression
+Input:
+print -5;
+Expected Output:
+-5
+Actual Output:
+-5
+[OK] Passed
+
+Running Statement Test: Binary Expression
+Input:
+print 2 + 3 * 4;
+Expected Output:
+14
+Actual Output:
+14
+[OK] Passed
+
+Running Statement Test: Grouping Expression
+Input:
+print (2 + 3) * 4;
+Expected Output:
+20
+Actual Output:
+20
+[OK] Passed
+
+Running Statement Test: If True Branch
+Input:
+if (true) print 1; else print 2;
+Expected Output:
+1
+Actual Output:
+1
+[OK] Passed
+
+Running Statement Test: If False Branch
+Input:
+if (false) print 1; else print 2;
+Expected Output:
+2
+Actual Output:
+2
+[OK] Passed
+
+Running Statement Test: While Loop
+Input:
+var i = 0; while (i < 3) { print i; i = i + 1; }
+Expected Output:
+0
+1
+2
+Actual Output:
+0
+1
+2
+[OK] Passed
+
+Running Statement Test: Function Declaration and Call
+Input:
+fun add(x, y) { return x + y; }
+print add(2, 3);
+Expected Output:
+5
+Actual Output:
+5
+[OK] Passed
+
+Running Statement Test: Function with local variable
+Input:
+fun test() { var x = 10; return x * 2; }
+print test();
+Expected Output:
+20
+Actual Output:
+20
+[OK] Passed
+
+Running Statement Test: Nested function calls
+Input:
+fun add(a, b) { return a + b; }
+fun mult(x, y) { return x * y; }
+print mult(add(2,3), 4);
+Expected Output:
+20
+Actual Output:
+20
+[OK] Passed
+
+Running Statement Test: Logical AND/OR
+Input:
+var x = true and false;
+var y = false or true;
+print x;
+print y;
+Expected Output:
+false
+true
+Actual Output:
+false
+true
+[OK] Passed
+
+Running Statement Test: Recursive function
+Input:
+fun fact(n) { 
+    if (n <= 1) return 1; 
+    return n * fact(n - 1); 
+}
+print fact(5);
+Expected Output:
+120
+Actual Output:
+120
+[OK] Passed
+
+Running Statement Test: Variable shadowing inside block
+Input:
+var a = "global";
+{
+    var a = "local";
+    print a;
+}
+print a;
+Expected Output:
+local
+global
+Actual Output:
+local
+global
+[OK] Passed
+
+Running Statement Test: Variable reference from enclosing scope
+Input:
+var a = "outer";
+{
+    print a;
+}
+Expected Output:
+outer
+Actual Output:
+outer
+[OK] Passed
+
+Running Statement Test: Simple closure capture
+Input:
+fun makeCounter() {
+    var count = 0;
+    fun inc() {
+        count = count + 1;
+        return count;
+    }
+    return inc;
+}
+var counter = makeCounter();
+print counter();
+print counter();
+Expected Output:
+1
+2
+Actual Output:
+1
+2
+[OK] Passed
+
+Running Statement Test: Nested closures sharing environment
+Input:
+fun outer() {
+    var x = "outside";
+    fun inner() {
+        print x;
+    }
+    return inner;
+}
+var closure = outer();
+closure();
+Expected Output:
+outside
+Actual Output:
+outside
+[OK] Passed
+
+Running Statement Test: If without else
+Input:
+var a = 10;
+if (a > 5) print "yes";
+Expected Output:
+yes
+Actual Output:
+yes
+[OK] Passed
+
+Running Statement Test: While with return condition
+Input:
+var i = 0;
+while (true) {
+    print i;
+    i = i + 1;
+    if (i == 3) return;
+}
+Expected Output:
+0
+1
+2
+Actual Output:
+0
+1
+2
+[OK] Passed
+
+Running Statement Test: Short-circuit AND
+Input:
+fun p() { print "should not print"; }
+var a = false and p();
+print a;
+Expected Output:
+false
+Actual Output:
+false
+[OK] Passed
+
+Running Statement Test: Short-circuit OR
+Input:
+fun p() { print "should not print"; }
+var a = true or p();
+print a;
+Expected Output:
+true
+Actual Output:
+true
+[OK] Passed
+
+Running Statement Test: String concatenation with variable
+Input:
+var greeting = "Hello";
+var name = "Lox";
+print greeting + " " + name + "!";
+Expected Output:
+Hello Lox!
+Actual Output:
+Hello Lox!
+[OK] Passed
+
+Running Statement Test: Implicit return nil
+Input:
+fun test() {
+    var a = 10;
+}
+test();
+Expected Output:
+
+Actual Output:
+
+[OK] Passed
+
+Running Statement Test: Return inside block
+Input:
+fun f() {
+    if (true) {
+        return 123;
+    }
+    return 999;
+}
+print f();
+Expected Output:
+123
+Actual Output:
+123
+[OK] Passed
+
+Running Statement Test: Inner function reads outer variable
+Input:
+fun outer() {
+    var x = "outer";
+    fun inner() { print x; }
+    inner();
+}
+outer();
+Expected Output:
+outer
+Actual Output:
+outer
+[OK] Passed
+
+Running Statement Test: Inner variable hides outer variable
+Input:
+var x = "global";
+fun outer() {
+    var x = "outer";
+    fun inner() {
+        var x = "inner";
+        print x;
+    }
+    inner();
+}
+outer();
+Expected Output:
+inner
+Actual Output:
+inner
+[OK] Passed
+
+Running Statement Test: Recursive countdown
+Input:
+fun countdown(n) {
+    print n;
+    if (n > 0) countdown(n - 1);
+}
+countdown(3);
+Expected Output:
+3
+2
+1
+0
+Actual Output:
+3
+2
+1
+0
+[OK] Passed
+
+
+All extended tests finished.
