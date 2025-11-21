@@ -41,6 +41,10 @@ fun main() {
     runStatementTest("If False Branch", "if (false) print 1; else print 2;", "2")
     runStatementTest("While Loop", "var i = 0; while (i < 3) { print i; i = i + 1; }", "0\n1\n2")
 
+    // For-loop tests
+    runStatementTest("For loop (one-line)", "for (var i = 0; i < 3; i = i + 1) print i;", "0\n1\n2")
+    runStatementTest("For loop (block)", "for (var i = 0; i < 3; i = i + 1) { print i; }", "0\n1\n2")
+
     // Functions
     runStatementTest(
         "Function Declaration and Call",
